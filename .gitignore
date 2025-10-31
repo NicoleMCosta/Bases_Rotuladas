@@ -1,6 +1,10 @@
+*
+!*.*
+
 dist/
 build/
 .vscode/
+
 
 grafico.py
 *distances*.csv
