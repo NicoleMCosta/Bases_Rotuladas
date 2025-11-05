@@ -34,15 +34,9 @@ double distancia(Objetos dataA, Objetos dataB){
     return sqrt(pow(dataB.X - dataA.X,2) + pow(dataB.Y - dataA.Y,2.0) + pow(dataB.Z - dataA.Z, 2.0) + pow(dataB.w - dataA.w, 2.0));
 }
 
-void distancias(const char *filename, int *num_combinacoes, int *qtdfiles){
+void distancias(FILE *csvpt, int *num_combinacoes, int *qtdfiles){
     (*qtdfiles)++;
 
-    FILE *csvpt = fopen(filename, "r");
-    if(!csvpt){
-        printf("Erro ao abrir arquivo.\n");
-        return;
-    }
-    
     Objetos *dados = openCSV(csvpt);
 
     *num_combinacoes = SIZE * (SIZE - 1) / 2;

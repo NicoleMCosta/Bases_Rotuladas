@@ -21,7 +21,7 @@ typedef struct {
 
 Objetos* openCSV(FILE *csv){
     if(csv == NULL){
-        printf("Erro ao abrir arquivo\n");
+        printf("Erro ao abrir arquivo DATASET\n");
         return NULL;
     }
     
@@ -31,23 +31,20 @@ Objetos* openCSV(FILE *csv){
         return NULL;
     }
 
-    int caso = 0;
     int r = 5;
     Objetos temp;
-    while (r == 5){
-        r = fscanf(csv, "%f,%f,%f,%f,%s", &temp.X, &temp.Y, &temp.Z, &temp.w, temp.tipo);
-        caso++;
-        obj[caso] = temp;
+    int caso = 0;
+    while ((r = fscanf(csv, "%f,%f,%f,%f,%s", &temp.X, &temp.Y, &temp.Z, &temp.w, temp.tipo)) == 5) {
+        obj[caso++] = temp;
     }
+
     return obj;
 }
 
-
-int limiar(FILE *output_csv, float limiar, int num_combinacoes){
+int limiar(float limiar, int num_combinacoes, const char *dist_file){
     DistanciaPar dados;
-    fclose(output_csv);
 
-    FILE *csv = fopen("distances.csv", "r");
+    FILE *csv = fopen(dist_file, "r");
     if (csv == NULL) {
         printf("Erro ao reabrir distances.csv para leitura\n");
         return 1;
@@ -71,6 +68,7 @@ int limiar(FILE *output_csv, float limiar, int num_combinacoes){
             break;
     }
     fclose(limiarcalc);
+    fclose(csv);
     return 0;
 }
 
@@ -105,7 +103,7 @@ void dfs(int v, int *tamanho){
 void componentes(const char *filename){
     FILE *csv = fopen(filename, "r");
     if(!csv){
-        printf("Erro ao abrir arquivo.\n");
+        printf("Erro ao abrir arquivo. COMPONENTES\n");
         return;
     }
 
