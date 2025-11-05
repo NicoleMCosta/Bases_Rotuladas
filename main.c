@@ -15,7 +15,7 @@ int main() {
     printf("Número de files: %d\n", qtdfiles);
 
     //limiar 0.102 = 1 componente tamanho 149(?)
-    limiar(0.00102, num_combinacoes, "distances1.csv"); 
-    componentes("limiar0.00102.csv");
+    limiar(0.102, num_combinacoes, "distances1.csv"); 
+    componentes("limiar0.10200.csv");
     return 0;
 }
