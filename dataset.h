@@ -19,27 +19,36 @@ typedef struct {
 } DistanciaPar;
 
 
-Objetos* openCSV(FILE *csv){
-    if(csv == NULL){
-        printf("Erro ao abrir arquivo DATASET\n");
+Objetos* openCSV(FILE *csv) {
+    if (!csv) {
+        printf("Erro ao abrir arquivo\n");
         return NULL;
     }
-    
-    Objetos *obj = malloc((SIZE+1)*sizeof(Objetos));
+
+    Objetos *obj = malloc(SIZE * sizeof(Objetos));
     if (!obj) {
-        printf("Erro de memoria\n");
+        printf("Erro de memória\n");
         return NULL;
     }
 
-    int r = 5;
-    Objetos temp;
+    char linha[128];
     int caso = 0;
-    while ((r = fscanf(csv, "%f,%f,%f,%f,%s", &temp.X, &temp.Y, &temp.Z, &temp.w, temp.tipo)) == 5) {
-        obj[caso++] = temp;
+
+    while (fgets(linha, sizeof(linha), csv) && caso < SIZE) {
+        // remove quebra de linha
+        linha[strcspn(linha, "\r\n")] = 0;
+
+        // lê os 4 floats e o restante da linha (inclusive espaços) como tipo
+        if (sscanf(linha, "%f,%f,%f,%f,%[^\n]", 
+                   &obj[caso].X, &obj[caso].Y, &obj[caso].Z, &obj[caso].w, obj[caso].tipo) == 5) {
+            caso++;
+        }
     }
 
+    printf("Total de objetos lidos: %d\n", caso);
     return obj;
 }
+
 
 int limiar(float limiar, int num_combinacoes, const char *dist_file){
     DistanciaPar dados;
@@ -51,7 +60,7 @@ int limiar(float limiar, int num_combinacoes, const char *dist_file){
     }
 
     char nomefile[20];
-    sprintf(nomefile, "limiar%.1f.csv", limiar);
+    sprintf(nomefile, "limiar%.5f.csv", limiar);
     FILE *limiarcalc= fopen(nomefile, "w");
         if(limiarcalc == NULL){
             printf("Erro ao criar o arquivo %s\n", nomefile);

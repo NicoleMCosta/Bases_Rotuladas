@@ -9,11 +9,13 @@ int main() {
         return 1;
     }
 
+
     distancias(csv1, &num_combinacoes, &qtdfiles);
     printf("\nNúmero de combinações: %d\n", num_combinacoes);
     printf("Número de files: %d\n", qtdfiles);
 
-    limiar(1.02, num_combinacoes, "distances1.csv"); 
-    componentes("limiar1.2.csv");
+    //limiar 0.102 = 1 componente tamanho 149(?)
+    limiar(0.00102, num_combinacoes, "distances1.csv"); 
+    componentes("limiar0.00102.csv");
     return 0;
 }

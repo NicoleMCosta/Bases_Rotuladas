@@ -43,10 +43,17 @@ void distancias(FILE *csvpt, int *num_combinacoes, int *qtdfiles){
     DistanciaPar *distancias = malloc(*num_combinacoes * sizeof(DistanciaPar));
     if (!distancias) {
         printf("Erro de memória ao alocar o array de distâncias\n");
+        return;
         free(dados);
         fclose(csvpt);
     }
+    printf("Primeiros 3 objetos lidos:\n");
+    for (int i = 0; i < 3; i++) {
+        printf("[%d] X=%.2f Y=%.2f Z=%.2f W=%.2f Tipo=%s\n",
+            i, dados[i].X, dados[i].Y, dados[i].Z, dados[i].w, dados[i].tipo);
+    }
 
+    
     // Calcula a distância para todos os pares
     int k = 0;
     for (int i = 0; i < SIZE; i++) {
