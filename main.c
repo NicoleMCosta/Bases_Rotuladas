@@ -1,21 +1,70 @@
 #include "dist_euclidiana.h"
 
+
+void execute(FILE *csv1, int num_combinacoes, int *qtdfiles){
+        char *dist_file = distancias(csv1, &num_combinacoes, qtdfiles);
+        if (dist_file == NULL) {
+            printf("Erro ao gerar arquivo de distâncias.\n");
+            free(dist_file);
+            return;
+        }
+
+    // float lim = 0.150;
+    // int count = 0;
+    // for(float i = lim; i < 0.0; i--){
+    //     printf("loop %i %lf\n", count++,lim);
+
+    //     char *arquivo_limiar = limiar(lim, num_combinacoes, dist_file);
+    //     if (arquivo_limiar == NULL) {
+    //         printf("Erro ao criar limiar file\n");
+    //         free(arquivo_limiar);
+    //         return;
+    //     }
+
+    //     int compt = componentes(arquivo_limiar);  
+    //     if(compt == 3){
+    //         printf("Limiar a ser usado: %lf", lim);
+    //         break;
+    //     }else{
+    //         lim= lim - 0.001;
+    //     }
+
+    // }
+
+    float limiar_inicial = 0.150;
+int count = 0;
+
+for (float lim = limiar_inicial; lim > 0.0f; lim -= 0.001f) {
+    printf("loop %d (lim = %.3f)\n", count++, lim);
+
+    char *arquivo_limiar = limiar(lim, num_combinacoes, dist_file);
+    if (arquivo_limiar == NULL) {
+        printf("Erro ao criar arquivo de limiar.\n");
+        break;
+    }
+
+    int compt = componentes(arquivo_limiar);
+    free(arquivo_limiar);
+
+    if (compt == 3) {
+        printf("Limiar a ser usado: %.3f\n", lim);
+        break;
+    }
+}
+
+}
+
+
 int main() {
     int num_combinacoes = 0;
     int qtdfiles = 0;
+    
     FILE *csv1 = fopen("./bases/rotulada.csv", "r");
     if (csv1 == NULL) {
-        printf("Erro ao reabrir distances.csv para leitura\n");
+        printf("Erro ao abrir base para leitura\n");
         return 1;
     }
 
-
-    distancias(csv1, &num_combinacoes, &qtdfiles);
-    printf("\nNúmero de combinações: %d\n", num_combinacoes);
-    printf("Número de files: %d\n", qtdfiles);
-
-    //limiar 0.102 = 1 componente tamanho 149(?)
-    limiar(0.102, num_combinacoes, "distances1.csv"); 
-    componentes("limiar0.10200.csv");
+    execute(csv1, num_combinacoes, &qtdfiles);
     return 0;
 }

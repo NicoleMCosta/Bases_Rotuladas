@@ -50,13 +50,12 @@ Objetos* openCSV(FILE *csv) {
 }
 
 
-int limiar(float limiar, int num_combinacoes, const char *dist_file){
+char *limiar(float limiar, int num_combinacoes, const char *dist_file){
     DistanciaPar dados;
 
     FILE *csv = fopen(dist_file, "r");
     if (csv == NULL) {
         printf("Erro ao reabrir distances.csv para leitura\n");
-        return 1;
     }
 
     char nomefile[20];
@@ -64,7 +63,6 @@ int limiar(float limiar, int num_combinacoes, const char *dist_file){
     FILE *limiarcalc= fopen(nomefile, "w");
         if(limiarcalc == NULL){
             printf("Erro ao criar o arquivo %s\n", nomefile);
-            return 1;
         }
 
     int count = 0;
@@ -78,7 +76,14 @@ int limiar(float limiar, int num_combinacoes, const char *dist_file){
     }
     fclose(limiarcalc);
     fclose(csv);
-    return 0;
+    
+    char *ret = malloc(strlen(nomefile) + 1);
+    if (ret == NULL) {
+        printf("Erro de memória ao salvar nome do arquivo.\n");
+        return NULL;
+    }
+    strcpy(ret, nomefile);
+    return ret;
 }
 
 
@@ -109,11 +114,11 @@ void dfs(int v, int *tamanho){
 
 
 //modificar função abaixo para contar e popular vetores de cada tipo existente em cada componente????
-void componentes(const char *filename){
+int componentes(const char *filename){
     FILE *csv = fopen(filename, "r");
     if(!csv){
         printf("Erro ao abrir arquivo. COMPONENTES\n");
-        return;
+        return 1;
     }
 
     n_vertices = 0;
@@ -156,5 +161,7 @@ void componentes(const char *filename){
     printf("Número de componentes conexos: %d\n", num_comps);
     for (int i = 0; i < num_comps; i++)
         printf("Tamanho do componente %d: %d\n", i + 1, tamanhos[i]);
+    
+    return num_comps;
 }
 
