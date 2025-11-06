@@ -56,15 +56,27 @@ for (float lim = limiar_inicial; lim > 0.0f; lim -= 0.001f) {
 
 
 int main() {
-    int num_combinacoes = 0;
-    int qtdfiles = 0;
+    // int num_combinacoes = 0;
+    // int qtdfiles = 0;
     
-    FILE *csv1 = fopen("./bases/rotulada.csv", "r");
-    if (csv1 == NULL) {
+    // FILE *csv1 = fopen("./bases/rotulada.csv", "r");
+    // if (csv1 == NULL) {
+    //     printf("Erro ao abrir base para leitura\n");
+    //     return 1;
+    // }
+
+
+    int num_combinacoes2 = 0;
+    int qtdfiles2 = 0;
+
+    FILE *csv2 = fopen("./bases/Dataset_rotulado_com_5_casos_de_proximidade.csv", "r");
+    if (csv2 == NULL) {
         printf("Erro ao abrir base para leitura\n");
         return 1;
     }
 
-    execute(csv1, num_combinacoes, &qtdfiles);
+    // execute(csv1, num_combinacoes, &qtdfiles);
+    execute(csv2, num_combinacoes2, &qtdfiles2);
+    
     return 0;
 }
