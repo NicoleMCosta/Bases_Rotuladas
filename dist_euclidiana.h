@@ -78,7 +78,7 @@ char *distancias(FILE *csvpt, int *num_combinacoes, int *qtdfiles){
         return NULL;
     }
 
-    for (int i = 0; i < *num_combinacoes; i++) {
+    for(int i = 0; i < *num_combinacoes; i++){
         fprintf(output_csv, "%d,%d,%f\n", distancias[i].ponto1 + 1, distancias[i].ponto2 + 1, distancias[i].distancia);
     }
 

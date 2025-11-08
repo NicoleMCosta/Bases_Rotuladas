@@ -1,7 +1,7 @@
 #include "dist_euclidiana.h"
 
 
-void execute(FILE *csv1, int num_combinacoes, int *qtdfiles){
+void execute(FILE *csv1, int num_combinacoes, int *qtdfiles, char *nomefile){
     char *dist_file = distancias(csv1, &num_combinacoes, qtdfiles);
     if (dist_file == NULL) {
         printf("Erro ao gerar arquivo de distâncias.\n");
@@ -9,13 +9,13 @@ void execute(FILE *csv1, int num_combinacoes, int *qtdfiles){
         return;
     }
 
-    float limiar_inicial = 0.150;
+    float limiar_inicial = 0.110;
     int count = 0;
 
-    for (float lim = limiar_inicial; lim > 0.0f; lim -= 0.001f) {
-        printf("loop %d (lim = %.3f)\n", count++, lim);
+    for (float lim = limiar_inicial; lim > 0.0f; lim -= 0.00001f) {
+        printf("loop %d (lim = %.5f)\n", count++, lim);
 
-        char *arquivo_limiar = limiar(lim, num_combinacoes, dist_file);
+        char *arquivo_limiar = limiar(lim, num_combinacoes, dist_file, nomefile);
         if (arquivo_limiar == NULL) {
             printf("Erro ao criar arquivo de limiar.\n");
             break;
@@ -54,10 +54,12 @@ int main() {
     }
 
     printf("LIMIAR BASE 1\n");
-    execute(csv1, num_combinacoes, &qtdfiles);
+    execute(csv1, num_combinacoes, &qtdfiles, "limiar1.csv");
 
-    printf("\n\n\nLIMIAR BASE 2\n\n");
-    execute(csv2, num_combinacoes2, &qtdfiles2);
+    //A FUNÇÃO PARA BASE 2 É UM LOOP ETERNO AINDA, NÃO EXECUTE
+    //NÃO.
+    // printf("\n\n\nLIMIAR BASE 2\n\n");
+    // execute(csv2, num_combinacoes2, &qtdfiles2, "limiar2.csv");
     
     return 0;
 }

@@ -50,7 +50,7 @@ Objetos* openCSV(FILE *csv) {
 }
 
 
-char *limiar(float limiar, int num_combinacoes, const char *dist_file){
+char *limiar(float limiar, int num_combinacoes, const char *dist_file, char *nomefile){
     DistanciaPar dados;
 
     FILE *csv = fopen(dist_file, "r");
@@ -58,8 +58,6 @@ char *limiar(float limiar, int num_combinacoes, const char *dist_file){
         printf("Erro ao reabrir distances.csv para leitura\n");
     }
 
-    char nomefile[20];
-    sprintf(nomefile, "limiar%.5f.csv", limiar);
     FILE *limiarcalc= fopen(nomefile, "w");
         if(limiarcalc == NULL){
             printf("Erro ao criar o arquivo %s\n", nomefile);
@@ -93,6 +91,7 @@ int vertices[SIZE];
 int n_vertices = 0;
 
 int indiceVertice(int rotulo){
+    rotulo-=1;
     for(int i = 0; i < n_vertices; i++){
         if (vertices[i] == rotulo)
             return i;
@@ -100,6 +99,7 @@ int indiceVertice(int rotulo){
     vertices[n_vertices] = rotulo;
     return n_vertices++;
 }
+
 
 void dfs(int v, int *tamanho){
     visitado[v] = 1;
@@ -113,7 +113,6 @@ void dfs(int v, int *tamanho){
 }
 
 
-//modificar função abaixo para contar e popular vetores de cada tipo existente em cada componente????
 int componentes(const char *filename){
     FILE *csv = fopen(filename, "r");
     if(!csv){
@@ -121,26 +120,19 @@ int componentes(const char *filename){
         return 1;
     }
 
-    n_vertices = 0;
+    n_vertices = SIZE;
     for (int i = 0; i < SIZE; i++) {
-        vertices[i] = 0;
+        vertices[i] = i;
         visitado[i] = 0;
         for (int j = 0; j < SIZE; j++) {
             matriz[i][j] = 0;
         }
     }
 
-    for(int i = 0; i < SIZE; i++){
-        for (int j = 0; j < SIZE; j++)
-            matriz[i][j] = 0;
-        visitado[i] = 0;
-    }
-
     int p1, p2;
-
     while(fscanf(csv, "%d,%d", &p1, &p2) == 2){
-        int a = indiceVertice(p1);
-        int b = indiceVertice(p2);
+        int a = p1 - 1;
+        int b = p2 - 1;
         matriz[a][b] = 1;
         matriz[b][a] = 1;
     }
@@ -148,9 +140,9 @@ int componentes(const char *filename){
     fclose(csv);
 
     int num_comps = 0;
-    int tamanhos[n_vertices];
+    int tamanhos[SIZE];
 
-    for(int i = 0; i < n_vertices; i++){
+    for(int i = 0; i < SIZE; i++){
         if(visitado[i] == 0){
             int tamanho = 0;
             dfs(i, &tamanho);
@@ -158,10 +150,26 @@ int componentes(const char *filename){
         }
     }
 
-    printf("Número de componentes conexos: %d\n", num_comps);
+    printf("Número de componentes conexos: %d\n", num_comps);    
     for (int i = 0; i < num_comps; i++)
         printf("Tamanho do componente %d: %d\n", i + 1, tamanhos[i]);
-    
-    return num_comps;
-}
 
+    if (num_comps == 3) {
+        int min = tamanhos[0], max = tamanhos[0];
+        for (int i = 1; i < 3; i++) {
+            if (tamanhos[i] < min) min = tamanhos[i];
+            if (tamanhos[i] > max) max = tamanhos[i];
+        }
+
+        int diff = max - min;
+        printf("Diferença máxima entre componentes: %d\n", diff);
+
+        if (diff <= 2) {
+            printf(">>> Agrupamento bem balanceado encontrado! <<<\n");
+            return 3; // equilibrado
+        } else {
+            return 2; // desbalanceado
+        }
+    }
+    return 1;
+}
