@@ -9,11 +9,11 @@ void execute(FILE *csv1, int num_combinacoes, int *qtdfiles, char *nomefile){
         return;
     }
 
-    float limiar_inicial = 0.110;
+    float limiar_inicial = 0.11000;
     int count = 0;
 
-    for (float lim = limiar_inicial; lim > 0.0f; lim -= 0.00001f) {
-        printf("loop %d (lim = %.5f)\n", count++, lim);
+    for (float lim = limiar_inicial; lim > 0.06f; lim -= 0.00001f) {
+        // printf("loop %d (lim = %.5f)\n", count++, lim);
 
         char *arquivo_limiar = limiar(lim, num_combinacoes, dist_file, nomefile);
         if (arquivo_limiar == NULL) {
@@ -56,10 +56,8 @@ int main() {
     printf("LIMIAR BASE 1\n");
     execute(csv1, num_combinacoes, &qtdfiles, "limiar1.csv");
 
-    //A FUNÇÃO PARA BASE 2 É UM LOOP ETERNO AINDA, NÃO EXECUTE
-    //NÃO.
-    // printf("\n\n\nLIMIAR BASE 2\n\n");
-    // execute(csv2, num_combinacoes2, &qtdfiles2, "limiar2.csv");
+    printf("\n\n\nLIMIAR BASE 2\n");
+    execute(csv2, num_combinacoes2, &qtdfiles2, "limiar2.csv");
     
     return 0;
 }

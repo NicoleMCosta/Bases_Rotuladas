@@ -150,26 +150,41 @@ int componentes(const char *filename){
         }
     }
 
-    printf("Número de componentes conexos: %d\n", num_comps);    
-    for (int i = 0; i < num_comps; i++)
-        printf("Tamanho do componente %d: %d\n", i + 1, tamanhos[i]);
+    // printf("Número de componentes conexos: %d\n", num_comps);    
+    // for (int i = 0; i < num_comps; i++)
+    //     printf("Tamanho do componente %d: %d\n", i + 1, tamanhos[i]);
 
-    if (num_comps == 3) {
-        int min = tamanhos[0], max = tamanhos[0];
-        for (int i = 1; i < 3; i++) {
-            if (tamanhos[i] < min) min = tamanhos[i];
-            if (tamanhos[i] > max) max = tamanhos[i];
+    int maiores3 = 0;
+    int min_size = 14;
+    for (int i = 0; i < num_comps; i++) {
+        if (tamanhos[i] >= min_size)
+            maiores3++;
+    }
+
+    // printf("Componentes grandes (>= %d): %d\n", min_size, maiores3);
+
+    if (maiores3 >= 3) {
+        int top3[3] = {0, 0, 0};
+        for (int i = 0; i < num_comps; i++) {
+            int t = tamanhos[i];
+            if (t > top3[0]) { top3[2] = top3[1]; top3[1] = top3[0]; top3[0] = t; }
+            else if (t > top3[1]) { top3[2] = top3[1]; top3[1] = t; }
+            else if (t > top3[2]) { top3[2] = t; }
         }
 
-        int diff = max - min;
-        printf("Diferença máxima entre componentes: %d\n", diff);
+        int diff = top3[0] - top3[2];
+        printf("Maiores componentes: %d, %d, %d (diferença = %d)\n", top3[0], top3[1], top3[2], diff);
 
-        if (diff <= 2) {
-            printf(">>> Agrupamento bem balanceado encontrado! <<<\n");
-            return 3; // equilibrado
-        } else {
-            return 2; // desbalanceado
+        if (diff <= 15) {
+            // system("clear");
+            printf("Número de componentes conexos: %d\n", num_comps);    
+            for (int i = 0; i < num_comps; i++)
+                printf("Tamanho do componente %d: %d\n", i + 1, tamanhos[i]);
+
+            return 3;
         }
     }
+
     return 1;
+
 }
