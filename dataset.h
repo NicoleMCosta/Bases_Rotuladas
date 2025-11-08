@@ -188,3 +188,10 @@ int componentes(const char *filename){
     return 1;
 
 }
+
+
+
+//Acurácia=(TP+TN)/( TP+ FP+ TN+ FN)
+/*a função componentes já cria uma matriz de confusão, porém não faz a tabelação de pos/negs
+Não tenho certeza se dá para usar a que está ali dentro sem quebrar a separação de componentes.
+*/

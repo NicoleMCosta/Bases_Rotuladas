@@ -4,7 +4,8 @@
 dist/
 build/
 .vscode/
-
+*.py
+/relatorio
 
 grafico.py
 *distances*.csv
