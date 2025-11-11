@@ -1,9 +1,10 @@
 #include "dist_euclidiana.h"
 
-
-void execute(FILE *csv1, int num_combinacoes, int *qtdfiles, char *nomefile){
+void execute(FILE *csv1, int num_combinacoes, int *qtdfiles, char *nomefile)
+{
     char *dist_file = distancias(csv1, &num_combinacoes, qtdfiles);
-    if (dist_file == NULL) {
+    if (dist_file == NULL)
+    {
         printf("Erro ao gerar arquivo de distâncias.\n");
         free(dist_file);
         return;
@@ -12,11 +13,13 @@ void execute(FILE *csv1, int num_combinacoes, int *qtdfiles, char *nomefile){
     float limiar_inicial = 0.11000;
     int count = 0;
 
-    for (float lim = limiar_inicial; lim > 0.06f; lim -= 0.00001f) {
+    for (float lim = limiar_inicial; lim > 0.06f; lim -= 0.00001f)
+    {
         // printf("loop %d (lim = %.5f)\n", count++, lim);
 
         char *arquivo_limiar = limiar(lim, num_combinacoes, dist_file, nomefile);
-        if (arquivo_limiar == NULL) {
+        if (arquivo_limiar == NULL)
+        {
             printf("Erro ao criar arquivo de limiar.\n");
             break;
         }
@@ -24,40 +27,44 @@ void execute(FILE *csv1, int num_combinacoes, int *qtdfiles, char *nomefile){
         int compt = componentes(arquivo_limiar);
         free(arquivo_limiar);
 
-        if (compt == 3) {
+        if (compt == 3)
+        {
             printf("Limiar a ser usado: %.3f\n", lim);
             break;
         }
     }
-
 }
 
-
-int main() {
+int main()
+{
     int num_combinacoes = 0;
     int qtdfiles = 0;
-    
+
     FILE *csv1 = fopen("./bases/rotulada.csv", "r");
-    if (csv1 == NULL) {
-        printf("Erro ao abrir base para leitura\n");
+    if (csv1 == NULL)
+    {
+        printf("Erro ao abrir base 1\n");
         return 1;
     }
-
 
     int num_combinacoes2 = 0;
     int qtdfiles2 = 0;
-
     FILE *csv2 = fopen("./bases/Dataset_rotulado_com_5_casos_de_proximidade.csv", "r");
-    if (csv2 == NULL) {
-        printf("Erro ao abrir base para leitura\n");
+    if (csv2 == NULL)
+    {
+        printf("Erro ao abrir base 2\n");
         return 1;
     }
 
-    printf("LIMIAR BASE 1\n");
+    printf(">>> PROCESSANDO BASE 1 <<<\n");
     execute(csv1, num_combinacoes, &qtdfiles, "limiar1.csv");
 
-    printf("\n\n\nLIMIAR BASE 2\n");
+    realizar_analise_ml("./bases/rotulada.csv", "limiar1.csv", 0);
+
+    printf("\n\n\n>>> PROCESSANDO BASE 2 <<<\n");
     execute(csv2, num_combinacoes2, &qtdfiles2, "limiar2.csv");
-    
+
+    realizar_analise_ml("./bases/Dataset_rotulado_com_5_casos_de_proximidade.csv", "limiar2.csv", 1);
+
     return 0;
 }
