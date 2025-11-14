@@ -167,6 +167,8 @@ int componentes(const char *filename)
     return 1;
 }
 
+
+
 int tipo_para_id(char *t)
 {
     if (strncmp(t, "Tipo 1", 6) == 0)
@@ -177,6 +179,7 @@ int tipo_para_id(char *t)
         return 2;
     return -1;
 }
+
 char *id_para_tipo(int id)
 {
     if (id == 0)
